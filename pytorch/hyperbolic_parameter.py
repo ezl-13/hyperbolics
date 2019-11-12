@@ -152,11 +152,14 @@ class HalfPlaneParameter(RParameter):
 
     @staticmethod
     def dot_h(x,y):
-        return torch.sum(x * y, -1) - 2*x[...,0]*y[...,0]
+        return torch.sum(x * y, -1)
+    @staticmethod
+    def euclid_dot_h(x,y):
+        return torch.sum(x * y, -1)
     @staticmethod
     def norm_h(x):
-        assert torch.all(HalfPlaneParameter.dot_h(x,x) >= 0), torch.min(HalfPlaneParameter.dot_h(x,x))
-        return torch.sqrt(torch.clamp(HalfPlaneParameter.dot_h(x,x), min=0.0))
+        # assert torch.all(HalfPlaneParameter.dot_h(x,x) >= 0), torch.min(HalfPlaneParameter.dot_h(x,x))
+        return torch.sqrt(torch.clamp(HalfPlaneParameter.euclid_dot_h(x,x), min=0.0))
     @staticmethod
     def dist_h(x,y):
         squared = HalfPlaneParameter.norm_h(y[...,:-1] - x[...,:-1]).pow(2)
