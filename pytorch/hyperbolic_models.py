@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from hyperbolic_parameter import PoincareParameter, EuclideanParameter, SphericalParameter, HyperboloidParameter
+from hyperbolic_parameter import PoincareParameter, EuclideanParameter, SphericalParameter, HyperboloidParameter, HalfPlaneParameter
 import logging
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -90,7 +90,8 @@ class ProductEmbedding(nn.Module):
         self.riemann = riemann
 
         # self.H = nn.ModuleList([Embedding(dist_p, PoincareParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
-        self.H = nn.ModuleList([Embedding(HyperboloidParameter.dist_h, HyperboloidParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
+        # self.H = nn.ModuleList([Embedding(HyperboloidParameter.dist_h, HyperboloidParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
+        self.H = nn.ModuleList([Embedding(HalfPlaneParameter.dist_h, HalfPlaneParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
         self.E = nn.ModuleList([Embedding(dist_e, EuclideanParameter, n, euc_d, False, initialize, False, initial_scale) for _ in range(euc_copies)])
         # self.E = nn.ModuleList([Embedding(dist_e, EuclideanParameter, n, euc_d, False, initialize, learn_scale, initial_scale) for _ in range(euc_copies)])
         self.S = nn.ModuleList([Embedding(dist_s, SphericalParameter, n, sph_d, project, initialize, learn_scale, initial_scale) for _ in range(sph_copies)])
