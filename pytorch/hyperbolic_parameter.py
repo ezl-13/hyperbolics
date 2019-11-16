@@ -83,15 +83,8 @@ class HyperboloidParameter(RParameter):
         x_[...,1:] = x_tail
         x_[...,0] = torch.sqrt(1 + torch.norm(x_tail,2,-1)**2)
 
-        debug = True
-        if debug:
-            bad = torch.min(-HyperboloidParameter.dot_h(x_,x_))
-            if bad <= 0.0:
-                print("way off hyperboloid", bad)
-            assert torch.all(-HyperboloidParameter.dot_h(x_,x_) > 0.0), f"way off hyperboloid {torch.min(-HyperboloidParameter.dot_h(x_,x_))}"
         xxx = x_ / torch.sqrt(torch.clamp(-HyperboloidParameter.dot_h(x_,x_), min=0.0)).unsqueeze(-1)
         return xxx
-        # return x / (-HyperboloidParameter.norm_h(x)).unsqueeze(-1)
 
     def initial_proj(self):
         """ Project the initialization of the embedding onto the manifold """
@@ -178,7 +171,7 @@ class HalfPlaneParameter(RParameter):
         # print(torch.log((val_minus + val_plus)))
         # print(2 * torch.log((val_minus + val_plus) / (2*torch.sqrt(y[...,-1] * x[...,-1]))))
 
-        return 2 * torch.log(torch.abs(val_minus + val_plus) / (2*torch.sqrt(y[...,-1] * x[...,-1])))
+        return 2 * torch.log((val_minus + val_plus) / (2*torch.sqrt(y[...,-1] * x[...,-1])))
 
     @staticmethod
     def _proj(x):
