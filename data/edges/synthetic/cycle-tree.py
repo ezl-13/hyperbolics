@@ -1,7 +1,6 @@
 import numpy as np
 import networkx as nx
-import itertools
-import argh
+import matplotlib.pyplot as plt
 
 cycle_nodes = 10
 
@@ -18,4 +17,6 @@ G = nx.compose_all(copies + [nx.cycle_graph(cycle_nodes)])
 # G = nx.compose_all(copies)
 
 nx.write_edgelist(G, "cycle-tree.edges", data=False)
+nx.draw_kamada_kawai(G)
+plt.show()
 

@@ -1,5 +1,6 @@
 import numpy as np
 import networkx as nx
+import matplotlib.pyplot as plt
 import sys, os
 import subprocess
 
@@ -19,3 +20,6 @@ for node in range(n):
             G.add_edge(edge[0], edge[1])
 
 nx.write_edgelist(G, 'compressed_tree.edges', data=False)
+print ("i'm drawing")
+nx.draw_networkx(G)
+plt.show()

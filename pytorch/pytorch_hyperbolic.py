@@ -349,9 +349,12 @@ def learn(dataset, dim=2, hyp=1, edim=1, euc=0, sdim=1, sph=0, scale=1., riemann
         fh  = logging.FileHandler(log_name)
         fh.setFormatter( formatter )
         log.addHandler(fh)
+        #############
+        loss_list = []
+        #############
 
     logging.info(f"Commandline {sys.argv}")
-    if model_save_file is None: logging.warn("No Model Save selected!")
+    if model_save_file is None: logging.warning("No Model Save selected!")
     G  = load_graph.load_graph(dataset)
     GM = nx.to_scipy_sparse_matrix(G, nodelist=list(range(G.order())))
 
@@ -391,9 +394,9 @@ def learn(dataset, dim=2, hyp=1, edim=1, euc=0, sdim=1, sph=0, scale=1., riemann
             m_init = torch.DoubleTensor(mds_warmstart.get_model(dataset,dim,scale)[1])
 
         logging.info(f"\t Warmstarting? {warm_start} {m_init.size() if warm_start else None} {G.order()}")
-        initial_scale = z.dataset.max_dist / 3.0
-        print("MAX DISTANCE", z.dataset.max_dist)
-        print("AVG DISTANCE", torch.mean(z.dataset.val_cache))
+        # initial_scale = z.dataset.max_dist / 3.0
+        # print("MAX DISTANCE", z.dataset.max_dist)
+        # print("AVG DISTANCE", torch.mean(z.dataset.val_cache))
         initial_scale=0.0
         m       = ProductEmbedding(G.order(), dim, hyp, edim, euc, sdim, sph, initialize=m_init, learn_scale=learn_scale, initial_scale=initial_scale, logrel_loss=logloss, dist_loss=distloss, square_loss=squareloss, sym_loss=symloss, exponential_rescale=exponential_rescale, riemann=riemann).to(device)
         m.normalize()
@@ -530,6 +533,11 @@ def learn(dataset, dim=2, hyp=1, edim=1, euc=0, sdim=1, sph=0, scale=1., riemann
         #         break
         if i % print_freq == 0:
             logging.info(f"{i} loss={l}")
+            ############
+            if log_name is not None:
+                loss_list.append(l)
+            #############
+
         if (i <= burn_in and i % (checkpoint_freq/5) == 0) or i % checkpoint_freq == 0:
             logging.info(f"\n*** Major Checkpoint. Computing Stats and Saving")
             avg_dist, wc_dist, me, mc, mapscore = major_stats(GM,n,m, True, Z, z, fig, ax, writer, visualize, subsample)
@@ -553,7 +561,13 @@ def learn(dataset, dim=2, hyp=1, edim=1, euc=0, sdim=1, sph=0, scale=1., riemann
 
 
     if log_name is not None:
-        with open(log_name + '.stat', "w") as f:
+        ###
+        with open(log_name + "_loss.stat", "w") as f:
+            for loss in loss_list:
+                f.write("%f\n" % loss)
+        ###
+
+        with open(log_name + '_final.stat', "w") as f:
             f.write("Best-loss MAP dist wc Final-loss MAP dist wc me mc\n")
             f.write(f"{best_loss:10.6f} {best_map:8.4f} {best_dist:8.4f} {best_wcdist:8.4f} {l:10.6f} {final_map:8.4f} {final_dist:8.4f} {final_wc:8.4f} {final_me:8.4f} {final_mc:8.4f}")
 
