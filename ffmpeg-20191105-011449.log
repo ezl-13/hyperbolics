@@ -1,0 +1,119 @@
+ffmpeg started on 2019-11-05 at 01:14:49
+Report written to "ffmpeg-20191105-011449.log"
+Command line:
+ffmpeg -r 10 -i "_tmp%07d.png" -vframes 101 -vcodec h264 -pix_fmt yuv420p -report -metadata "artist=HazyResearch" -y animations/phylo_tree.H10-1.E1-0.S1-0.lr5.0.ep1000.seed0.mp4
+ffmpeg version 4.2 Copyright (c) 2000-2019 the FFmpeg developers
+  built with gcc 7.3.0 (crosstool-NG 1.23.0.449-a04d0)
+  configuration: --prefix=/opt/conda --cc=/home/conda/feedstock_root/build_artifacts/ffmpeg_1566210161358/_build_env/bin/x86_64-conda_cos6-linux-gnu-cc --disable-doc --disable-openssl --enable-avresample --enable-gnutls --enable-gpl --enable-hardcoded-tables --enable-libfreetype --enable-libopenh264 --enable-libx264 --enable-pic --enable-pthreads --enable-shared --enable-static --enable-version3 --enable-zlib --enable-libmp3lame
+  libavutil      56. 31.100 / 56. 31.100
+  libavcodec     58. 54.100 / 58. 54.100
+  libavformat    58. 29.100 / 58. 29.100
+  libavdevice    58.  8.100 / 58.  8.100
+  libavfilter     7. 57.100 /  7. 57.100
+  libavresample   4.  0.  0 /  4.  0.  0
+  libswscale      5.  5.100 /  5.  5.100
+  libswresample   3.  5.100 /  3.  5.100
+  libpostproc    55.  5.100 / 55.  5.100
+Splitting the commandline.
+Reading option '-r' ... matched as option 'r' (set frame rate (Hz value, fraction or abbreviation)) with argument '10'.
+Reading option '-i' ... matched as input url with argument '_tmp%07d.png'.
+Reading option '-vframes' ... matched as option 'vframes' (set the number of video frames to output) with argument '101'.
+Reading option '-vcodec' ... matched as option 'vcodec' (force video codec ('copy' to copy stream)) with argument 'h264'.
+Reading option '-pix_fmt' ... matched as option 'pix_fmt' (set pixel format) with argument 'yuv420p'.
+Reading option '-report' ... matched as option 'report' (generate a report) with argument '1'.
+Reading option '-metadata' ... matched as option 'metadata' (add metadata) with argument 'artist=HazyResearch'.
+Reading option '-y' ... matched as option 'y' (overwrite output files) with argument '1'.
+Reading option 'animations/phylo_tree.H10-1.E1-0.S1-0.lr5.0.ep1000.seed0.mp4' ... matched as output url.
+Finished splitting the commandline.
+Parsing a group of options: global .
+Applying option report (generate a report) with argument 1.
+Applying option y (overwrite output files) with argument 1.
+Successfully parsed a group of options.
+Parsing a group of options: input url _tmp%07d.png.
+Applying option r (set frame rate (Hz value, fraction or abbreviation)) with argument 10.
+Successfully parsed a group of options.
+Opening an input file: _tmp%07d.png.
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000000.png' for reading
+[file @ 0x555ad80c9c40] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80c9cc0] Statistics: 50448 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000001.png' for reading
+[file @ 0x555ad80c9c80] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80c9e40] Statistics: 189879 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000002.png' for reading
+[file @ 0x555ad80c9f00] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cb280] Statistics: 226567 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000003.png' for reading
+[file @ 0x555ad80cb280] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80d3940] Statistics: 239299 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000004.png' for reading
+[file @ 0x555ad80d3940] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cb3c0] Statistics: 247353 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000005.png' for reading
+[file @ 0x555ad80cb3c0] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80d3c40] Statistics: 249771 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000006.png' for reading
+[file @ 0x555ad80d3a80] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80d3c00] Statistics: 249898 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000007.png' for reading
+[file @ 0x555ad80d3e40] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80d3c40] Statistics: 249481 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000008.png' for reading
+[file @ 0x555ad80d3c40] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80d3f00] Statistics: 246527 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000009.png' for reading
+[file @ 0x555ad80d41c0] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80d43c0] Statistics: 243182 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000010.png' for reading
+[file @ 0x555ad80d43c0] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80d3fc0] Statistics: 239833 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000011.png' for reading
+[file @ 0x555ad80d4140] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80d3fc0] Statistics: 238114 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000012.png' for reading
+[file @ 0x555ad80d4080] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cc800] Statistics: 237513 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000013.png' for reading
+[file @ 0x555ad80cc800] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cc6c0] Statistics: 234337 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000014.png' for reading
+[file @ 0x555ad80cc6c0] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cc940] Statistics: 233735 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000015.png' for reading
+[file @ 0x555ad80ccac0] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cccc0] Statistics: 233275 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000016.png' for reading
+[file @ 0x555ad80cccc0] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80ccd40] Statistics: 232857 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000017.png' for reading
+[file @ 0x555ad80ccd40] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80ccf40] Statistics: 231987 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000018.png' for reading
+[file @ 0x555ad80ccf40] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80ccfc0] Statistics: 228404 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000019.png' for reading
+[file @ 0x555ad80ccfc0] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cd3c0] Statistics: 226568 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000020.png' for reading
+[file @ 0x555ad80cd3c0] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cd440] Statistics: 226047 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000021.png' for reading
+[file @ 0x555ad80cd440] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cd740] Statistics: 225591 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Opening '_tmp0000022.png' for reading
+[file @ 0x555ad80cd740] Setting default whitelist 'file,crypto'
+[AVIOContext @ 0x555ad80cd940] Statistics: 225638 bytes read, 0 seeks
+[image2 @ 0x555ad80c6cc0] Probe buffer size limit of 5000000 bytes reached
+Input #0, image2, from '_tmp%07d.png':
+  Duration: 00:00:04.04, start: 0.000000, bitrate: N/A
+    Stream #0:0, 23, 1/25: Video: png, rgba(pc), 1080x1080 [SAR 4251:4251 DAR 1:1], 25 fps, 25 tbr, 25 tbn, 25 tbc
+Successfully opened the file.
+Parsing a group of options: output url animations/phylo_tree.H10-1.E1-0.S1-0.lr5.0.ep1000.seed0.mp4.
+Applying option vframes (set the number of video frames to output) with argument 101.
+Applying option vcodec (force video codec ('copy' to copy stream)) with argument h264.
+Applying option pix_fmt (set pixel format) with argument yuv420p.
+Applying option metadata (add metadata) with argument artist=HazyResearch.
+Successfully parsed a group of options.
+Opening an output file: animations/phylo_tree.H10-1.E1-0.S1-0.lr5.0.ep1000.seed0.mp4.
+Matched encoder 'libx264' for codec 'h264'.
+[file @ 0x555ad80d1040] Setting default whitelist 'file,crypto'
+animations/phylo_tree.H10-1.E1-0.S1-0.lr5.0.ep1000.seed0.mp4: No such file or directory

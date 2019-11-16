@@ -7,7 +7,7 @@ import random
 datasets = [
     "synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549",
     "synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282",
-    "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
+    # "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
     "synthetic/CS229_datasets/cycle_tree_c10_r2_h2"
 ]
 
@@ -16,7 +16,26 @@ models = [
     {'dim': 10, 'hyp': 1, 'edim': 0, 'euc': 0, 'sdim': 0, 'sph': 0},
 ]
 
-lrs = [.01, 1, 5, 10]
+# LR 0.1
+
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549.edges --dim 2 --log-name ./out/balanced_tree_r3_h5_d0.00549.H2-1.lr0.1 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 0.1 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549.edges --dim 10 --log-name ./out/balanced_tree_r3_h5_d0.00549.H10-1.lr0.1 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 0.1 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282.edges --dim 2 --log-name ./out/balanced_tree_r5_h3_d0.01282.H2-1.lr0.1 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 0.1 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282.edges --dim 10 --log-name ./out/balanced_tree_r5_h3_d0.01282.H10-1.lr0.1 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 0.1 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/cycle_tree_c10_r2_h2.edges --dim 2 --log-name ./out/cycle_tree_c10_r2_h2.H2-1.lr0.1 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 0.1 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/cycle_tree_c10_r2_h2.edges --dim 10 --log-name ./out/cycle_tree_c10_r2_h2.H10-1.lr0.1 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 0.1 --subsample 16
+
+# LR 5
+
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549.edges --dim 2 --log-name ./out/balanced_tree_r3_h5_d0.00549.H2-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549.edges --dim 10 --log-name ./out/balanced_tree_r3_h5_d0.00549.H10-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282.edges --dim 2 --log-name ./out/balanced_tree_r5_h3_d0.01282.H2-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282.edges --dim 10 --log-name ./out/balanced_tree_r5_h3_d0.01282.H10-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/cycle_tree_c10_r2_h2.edges --dim 2 --log-name ./out/cycle_tree_c10_r2_h2.H2-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
+#python pytorch/pytorch_hyperbolic.py learn data/edges/synthetic/CS229_datasets/cycle_tree_c10_r2_h2.edges --dim 10 --log-name ./out/cycle_tree_c10_r2_h2.H10-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
+
+
+lrs = [.1, 5]
 
 def run_pytorch(run_name, epochs, batch_size):
     params = []
