@@ -5,15 +5,20 @@ import itertools
 import random
 
 datasets = [
-    "wordnet"
-    # "synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549",
-    # "synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282",
-    # # "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
-    # "synthetic/CS229_datasets/cycle_tree_c10_r2_h2"
+    "synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549",
+    "synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282",
+    "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
+    "synthetic/CS229_datasets/les_mis.edges",
+    "synthetic/CS229_datasets/random_graph_nodes400_prob0.5_d0.49673.edges",
+    "synthetic/CS229_datasets/random_graph_nodes400_prob0.25_d0.24924.edges",
+    "synthetic/CS229_datasets/random_graph_nodes400_prob1_d1.0.edges",
+    "synthetic/CS229_datasets/random_graph_nodes400_prob0.75_d0.74951.edges",
+    "synthetic/CS229_datasets/sierp-K4-5.edges"
 ]
 
 models = [
     {'dim': 2, 'hyp': 1, 'edim': 0, 'euc': 0, 'sdim': 0, 'sph': 0},
+    {'dim': 5, 'hyp': 1, 'edim': 0, 'euc': 0, 'sdim': 0, 'sph': 0},
     {'dim': 10, 'hyp': 1, 'edim': 0, 'euc': 0, 'sdim': 0, 'sph': 0},
 ]
 
@@ -35,8 +40,7 @@ models = [
 #python /content/hyperbolics/pytorch/pytorch_hyperbolic.py learn /content/hyperbolics/data/edges/synthetic/CS229_datasets/cycle_tree_c10_r2_h2.edges --dim 2 --log-name /content/hyperbolics/out/cycle_tree_c10_r2_h2.H2-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
 #python /content/hyperbolics/pytorch/pytorch_hyperbolic.py learn /content/hyperbolics/data/edges/synthetic/CS229_datasets/cycle_tree_c10_r2_h2.edges --dim 10 --log-name /content/hyperbolics/out/cycle_tree_c10_r2_h2.H10-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
 
-
-lrs = [.1, 5]
+lrs = [5, 10]
 
 def run_pytorch(run_name, epochs, batch_size):
     params = []

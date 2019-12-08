@@ -268,11 +268,16 @@ class PoincareParameter(RParameter):
     def modify_grad_inplace(self):
         # d        = self.data.dim()
         w_norm   = torch.norm(self.data,2,-1, True)
+        print (w_norm.shape)
+
         # This is the inverse of the remanian metric, which we need to correct for.
         hyper_b  = (1 - w_norm**2)**2/4
+        print (hyper_b.shape)
         # new_size = tuple([1] * (d - 1) + [self.data.size(d-1)])
         # self.grad   *= hyper_b.repeat(*new_size) # multiply pointwise
+        print (self.grad.shape)
         self.grad   *= hyper_b # multiply pointwise
+        print (self.grad.shape)
         self.grad.clamp_(min=-10000.0, max=10000.0)
 
         # We could do the projection here?
