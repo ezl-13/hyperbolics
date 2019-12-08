@@ -5,10 +5,11 @@ import itertools
 import random
 
 datasets = [
-    "synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549",
-    "synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282",
-    # "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
-    "synthetic/CS229_datasets/cycle_tree_c10_r2_h2"
+    "wordnet"
+    # "synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549",
+    # "synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282",
+    # # "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
+    # "synthetic/CS229_datasets/cycle_tree_c10_r2_h2"
 ]
 
 models = [
