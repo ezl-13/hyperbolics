@@ -246,16 +246,77 @@ class HalfPlaneParameter(RParameter):
         self.proj()
 
     def modify_grad_inplace(self):
-        """ Convert Euclidean gradient into Riemannian """
-        self.grad[...,0] *= -1
-        #print("check data")
-        #print(np.argwhere(torch.isnan(self.data).cpu().numpy()))
-        #print("check grad")
-        #print(np.argwhere(torch.isnan(self.grad).cpu().numpy()))
+        ne = (self.data[:,-1] * self.data[:,-1]).view(-1, 1)
+        self.grad = self.grad * ne
+        self.grad.clamp_(min=-10000.0, max=10000.0)
 
 
-        # self.grad += self.__class__.dot_h(self.data, self.grad).unsqueeze(-1) * self.data
-        self.grad -= self.__class__.dot_h(self.data, self.grad).unsqueeze(-1) / HyperboloidParameter.dot_h(self.data, self.data).unsqueeze(-1) * self.data
+# TODO:
+# 1. Improve speed up of projection by making operations in place.
+class KleinParameter(RParameter):
+    def __new__(cls, data=None, requires_grad=True, sizes=None, check_graph=False):
+        ret =  super().__new__(cls, data, requires_grad, sizes)
+        ret.check_graph = check_graph
+        return ret
+
+    def modify_grad_inplace(self):
+        w_norm   = torch.norm(self.data,2,-1, True)
+        hyper_b   = 1 - w_norm**2
+        self.grad   *= hyper_b # multiply pointwise
+        self.grad.clamp_(min=-10.0, max=10.0)
+
+    @staticmethod
+    def _correct(x, eps=1e-10):
+        current_norms = torch.norm(x,2,x.dim() - 1)
+        mask_idx      = current_norms < 1./(1+eps)
+        modified      = 1./((1+eps)*current_norms)
+        modified[mask_idx] = 1.0
+        #new_size      = [1]*current_norms.dim() + [x.size(x.dim()-1)]
+        #return modified.unsqueeze(modified.dim()).repeat(*new_size)
+        # return modified.unsqueeze(modified.dim()).expand(x.size())
+        return modified.unsqueeze(-1)
+
+    @staticmethod
+    def _proj(x, eps=1e-10):
+        # return x * PoincareParameter._correct(x, eps=eps)
+        """ Project onto hyperboloid """
+        x_ = torch.tensor(x)
+        x_tail = x_[...,1:]
+        current_norms = torch.norm(x_tail,2,-1)
+        scale      = (current_norms/1e7).clamp_(min=1.0)
+        x_tail /= scale.unsqueeze(-1)
+        x_[...,1:] = x_tail
+        x_[...,0] = torch.sqrt(1 + torch.norm(x_tail,2,-1)**2)
+
+        debug = False
+        if debug:
+            bad = torch.min(-HyperboloidParameter.dot_h(x_,x_))
+            if bad <= 0.0:
+                print("way off hyperboloid", bad)
+            assert torch.all(-HyperboloidParameter.dot_h(x_,x_) > 0.0), f"way off hyperboloid {torch.min(-HyperboloidParameter.dot_h(x_,x_))}"
+        xxx = x_ / torch.sqrt(torch.clamp(-HyperboloidParameter.dot_h(x_,x_), min=0.0)).unsqueeze(-1)
+
+        # AT THIS POINT, xxx is hyperboloid
+        final_dim = xxx[...,-1]
+        final_dim = np.reshape(final_dim, (-1,1))
+        final_dim = 1 / final_dim
+
+        xxx[:, -1] = 1
+        xxx = xxx * final_dim
+
+        # AT THIS POINT, xxx is hemisphere
+        xxx[:, -1] = 1
+
+        # AT THIS POINT, xxx is half plane
+        return xxx
+
+
+    # def proj(self, eps=1e-10):
+    #     self.data = self.__class__._proj(self.data.detach())#PoincareParameter._correct(self.data, eps=eps)
+
+    def __repr__(self):
+        return 'Hyperbolic parameter containing:' + self.data.__repr__()
+
 
 # TODO:
 # 1. Improve speed up of projection by making operations in place.
@@ -303,96 +364,6 @@ class PoincareParameter(RParameter):
 
     def __repr__(self):
         return 'Hyperbolic parameter containing:' + self.data.__repr__()
-
-class HyperboloidParameter(RParameter):
-    def __new__(cls, data=None, requires_grad=True, sizes=None, exp=True):
-        if sizes is not None:
-            sizes = list(sizes)
-            sizes[-1] += 1
-        return super().__new__(cls, data, requires_grad, sizes, exp)
-
-    @staticmethod
-    def dot_h(x,y):
-        return torch.sum(x * y, -1) - 2*x[...,0]*y[...,0]
-    @staticmethod
-    def norm_h(x):
-        assert torch.all(HyperboloidParameter.dot_h(x,x) >= 0), torch.min(HyperboloidParameter.dot_h(x,x))
-        return torch.sqrt(torch.clamp(HyperboloidParameter.dot_h(x,x), min=0.0))
-    @staticmethod
-    def dist_h(x,y):
-        # print("before", x, y)
-        # print("before dots", HyperboloidParameter.dot_h(x,x)+1, HyperboloidParameter.dot_h(y,y)+1)
-        # print("after dots", -HyperboloidParameter.dot_h(x,y))
-        # return acosh(-HyperboloidParameter.dot_h(x,y) - 1e-7)
-        bad = torch.min(-HyperboloidParameter.dot_h(x,y) - 1.0)
-        if bad <= -1e-4:
-            print("bad dist", bad.item())
-        # assert torch.all(-HyperboloidParameter.dot_h(x,y) >= 1.0 - 1e-4), torch.min(-HyperboloidParameter.dot_h(x,y) - 1.0)
-	    # we're dividing by dist_h somewhere so we can't have it be 0, force dp > 1
-        return acosh(torch.clamp(-HyperboloidParameter.dot_h(x,y), min=(1.0+1e-8)))
-
-    @staticmethod
-    def _proj(x):
-        """ Project onto hyperboloid """
-        x_ = torch.tensor(x)
-        x_tail = x_[...,1:]
-        current_norms = torch.norm(x_tail,2,-1)
-        scale      = (current_norms/1e7).clamp_(min=1.0)
-        x_tail /= scale.unsqueeze(-1)
-        x_[...,1:] = x_tail
-        x_[...,0] = torch.sqrt(1 + torch.norm(x_tail,2,-1)**2)
-
-        xxx = x_ / torch.sqrt(torch.clamp(-HyperboloidParameter.dot_h(x_,x_), min=0.0)).unsqueeze(-1)
-        return xxx
-
-    def initial_proj(self):
-        """ Project the initialization of the embedding onto the manifold """
-        self.data[...,0] = torch.sqrt(1 + torch.norm(self.data.detach()[...,1:],2,-1)**2)
-        self.proj()
-
-
-    def exp(self, lr):
-        """ Exponential map """
-        x = self.data.detach()
-        # print("norm", HyperboloidParameter.norm_h(x))
-        v = -lr * self.grad
-
-        retract = False
-        if retract:
-        # retraction
-            # print("retract")
-            self.data = x + v
-
-        else:
-            # print("tangent", HyperboloidParameter.dot_h(x, v))
-            assert torch.all(1 - torch.isnan(v))
-            n = self.__class__.norm_h(v).unsqueeze(-1)
-            assert torch.all(1 - torch.isnan(n))
-            n.clamp_(max=1.0)
-            # e = torch.cosh(n)*x + torch.sinh(n)*v/n
-            mask = torch.abs(n)<1e-7
-            cosh = torch.cosh(n)
-            cosh[mask] = 1.0
-            sinh = torch.sinh(n)
-            sinh[mask] = 0.0
-            n[mask] = 1.0
-            e = cosh*x + sinh/n*v
-            # assert torch.all(-HyperboloidParameter.dot_h(e,e) >= 0), torch.min(-HyperboloidParameter.dot_h(e,e))
-            self.data = e
-        self.proj()
-
-
-    def modify_grad_inplace(self):
-        """ Convert Euclidean gradient into Riemannian """
-        self.grad[...,0] *= -1
-        #print("check data")
-        #print(np.argwhere(torch.isnan(self.data).cpu().numpy()))
-        #print("check grad")
-        #print(np.argwhere(torch.isnan(self.grad).cpu().numpy()))
-
-
-        # self.grad += self.__class__.dot_h(self.data, self.grad).unsqueeze(-1) * self.data
-        self.grad -= self.__class__.dot_h(self.data, self.grad).unsqueeze(-1) / HyperboloidParameter.dot_h(self.data, self.data).unsqueeze(-1) * self.data
 
 class SphericalParameter(RParameter):
     def __new__(cls, data=None, requires_grad=True, sizes=None, exp=True):
