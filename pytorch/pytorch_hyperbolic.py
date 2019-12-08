@@ -53,6 +53,7 @@ def cu_var(x):
     if isinstance(x, list) : return [cu_var(u) for u in x]
     if isinstance(x, tuple): return tuple([cu_var(u) for u in list(x)])
     return torch.tensor(x, device=device)
+    # return x.clone().detach()
 
 def unwrap(x):
     """ Extract the numbers from (sequences of) pytorch tensors """
