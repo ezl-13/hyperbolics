@@ -67,7 +67,21 @@ class HyperboloidParameter(RParameter):
         assert torch.all(HyperboloidParameter.dot_h(x,x) >= 0), torch.min(HyperboloidParameter.dot_h(x,x))
         return torch.sqrt(torch.clamp(HyperboloidParameter.dot_h(x,x), min=0.0))
     @staticmethod
-    def dist_h(x,y):
+    def dist_h(x_orig,y_orig):
+        print(x_orig)
+        x = x_orig.detach().numpy()
+        y = y_orig.detach().numpy()
+        x = x.astype(np.float32)
+        y = y.astype(np.float32)
+        x = x.astype(np.float64)
+        y = y.astype(np.float64)
+        x = torch.tensor(x)
+        x_orig[...] = x[...]
+        print(x_orig)
+        y = torch.tensor(y)
+        y_orig[...] = y[...]
+        print(y_orig)
+        exit()
         # print("before", x, y)
         # print("before dots", HyperboloidParameter.dot_h(x,x)+1, HyperboloidParameter.dot_h(y,y)+1)
         # print("after dots", -HyperboloidParameter.dot_h(x,y))
@@ -125,7 +139,7 @@ class HyperboloidParameter(RParameter):
             sinh[mask] = 0.0
             n[mask] = 1.0
             e = cosh*x + sinh/n*v
-            # assert torch.all(-HyperboloidParameter.dot_h(e,e) >= 0), torch.min(-HyperboloidParameter.dot_h(e,e))
+            assert torch.all(-HyperboloidParameter.dot_h(e,e) >= 0), torch.min(-HyperboloidParameter.dot_h(e,e))
             self.data = e
         self.proj()
 
@@ -227,35 +241,6 @@ class HalfPlaneParameter(RParameter):
         self.data[...,0] = torch.sqrt(1 + torch.norm(self.data.detach()[...,1:],2,-1)**2)
         self.proj()
 
-    def exp(self, lr):
-        """ Exponential map """
-        x = self.data.detach()
-        # print("norm", HyperboloidParameter.norm_h(x))
-        v = -lr * self.grad
-
-        retract = True
-        if retract:
-        # retraction
-            # print("retract")
-            self.data = x + v
-        else:
-            # print("tangent", HyperboloidParameter.dot_h(x, v))
-            assert torch.all(1 - torch.isnan(v))
-            n = self.__class__.norm_h(v).unsqueeze(-1)
-            assert torch.all(1 - torch.isnan(n))
-            n.clamp_(max=1.0)
-            # e = torch.cosh(n)*x + torch.sinh(n)*v/n
-            mask = torch.abs(n)<1e-7
-            cosh = torch.cosh(n)
-            cosh[mask] = 1.0
-            sinh = torch.sinh(n)
-            sinh[mask] = 0.0
-            n[mask] = 1.0
-            e = cosh*x + sinh/n*v
-            # assert torch.all(-HyperboloidParameter.dot_h(e,e) >= 0), torch.min(-HyperboloidParameter.dot_h(e,e))
-            self.data = e
-        self.proj()
-
     def modify_grad_inplace(self):
         ne = (self.data[:,-1] * self.data[:,-1]).view(-1, 1)
         self.grad = self.grad * ne
@@ -272,11 +257,11 @@ class KleinParameter(RParameter):
         ret.check_graph = check_graph
         return ret
 
-    def modify_grad_inplace(self):
-        w_norm   = torch.norm(self.data,2,-1, True)
-        hyper_b   = 1 - w_norm**2
-        self.grad   *= hyper_b # multiply pointwise
-        self.grad.clamp_(min=-10.0, max=10.0)
+    # def modify_grad_inplace(self):
+    #     w_norm   = torch.norm(self.data,2,-1, True)
+    #     hyper_b   = 1 - w_norm**2
+    #     self.grad   *= hyper_b # multiply pointwise
+    #     self.grad.clamp_(min=-10.0, max=10.0)
 
     @staticmethod
     def _correct(x, eps=1e-10):
@@ -305,8 +290,8 @@ class KleinParameter(RParameter):
         if debug:
             bad = torch.min(-HyperboloidParameter.dot_h(x_,x_))
             if bad <= 0.0:
-                print("way off hyperboloid", bad)
-            assert torch.all(-HyperboloidParameter.dot_h(x_,x_) > 0.0), f"way off hyperboloid {torch.min(-HyperboloidParameter.dot_h(x_,x_))}"
+                print("way off klein", bad)
+            assert torch.all(-HyperboloidParameter.dot_h(x_,x_) > 0.0), f"way off klein {torch.min(-HyperboloidParameter.dot_h(x_,x_))}"
         xxx = x_ / torch.sqrt(torch.clamp(-HyperboloidParameter.dot_h(x_,x_), min=0.0)).unsqueeze(-1)
 
         # AT THIS POINT, xxx is hyperboloid
@@ -323,9 +308,22 @@ class KleinParameter(RParameter):
         # AT THIS POINT, xxx is half plane
         return xxx
 
+    def exp(self, lr):
+        """ Exponential map """
+        x = self.data.detach()
+        v = -lr * self.grad
 
-    # def proj(self, eps=1e-10):
-    #     self.data = self.__class__._proj(self.data.detach())#PoincareParameter._correct(self.data, eps=eps)
+        assert torch.all(1 - torch.isnan(v))
+        n = self.__class__.norm_h(v).unsqueeze(-1)
+        assert torch.all(1 - torch.isnan(n))
+        n.clamp_(max=1.0)
+        v_norm = torch.norm(v)
+        e = v * (torch.sinh(n) / torch.cosh(n))
+        self.data = e
+        self.proj()
+
+    def proj(self, eps=1e-10):
+        self.data = self.__class__._proj(self.data.detach())
 
     def __repr__(self):
         return 'Hyperbolic parameter containing:' + self.data.__repr__()
