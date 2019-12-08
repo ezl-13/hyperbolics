@@ -68,20 +68,20 @@ class HyperboloidParameter(RParameter):
         return torch.sqrt(torch.clamp(HyperboloidParameter.dot_h(x,x), min=0.0))
     @staticmethod
     def dist_h(x_orig,y_orig):
-        print(x_orig)
-        x = x_orig.detach().numpy()
-        y = y_orig.detach().numpy()
-        x = x.astype(np.float32)
-        y = y.astype(np.float32)
-        x = x.astype(np.float64)
-        y = y.astype(np.float64)
-        x = torch.tensor(x)
-        x_orig[...] = x[...]
-        print(x_orig)
-        y = torch.tensor(y)
-        y_orig[...] = y[...]
-        print(y_orig)
-        exit()
+        # print(x_orig)
+        # x = x_orig.detach().numpy()
+        # y = y_orig.detach().numpy()
+        # x = x.astype(np.float32)
+        # y = y.astype(np.float32)
+        # x = x.astype(np.float64)
+        # y = y.astype(np.float64)
+        # x = torch.tensor(x)
+        # x_orig[...] = x[...]
+        # print(x_orig)
+        # y = torch.tensor(y)
+        # y_orig[...] = y[...]
+        # print(y_orig)
+        # exit()
         # print("before", x, y)
         # print("before dots", HyperboloidParameter.dot_h(x,x)+1, HyperboloidParameter.dot_h(y,y)+1)
         # print("after dots", -HyperboloidParameter.dot_h(x,y))
@@ -162,7 +162,7 @@ class HyperboloidParameter(RParameter):
 ###############################################################
 
 class HalfPlaneParameter(RParameter):
-    def __new__(cls, data=None, requires_grad=True, sizes=None, exp=True):
+    def __new__(cls, data=None, requires_grad=True, sizes=None, exp=False):
         if sizes is not None:
             sizes = list(sizes)
             sizes[-1] += 1
@@ -197,7 +197,6 @@ class HalfPlaneParameter(RParameter):
         numerator = ((y - x) * (y - x)).sum(1)
         denominator = 2 * x[:, -1] * y[:, -1]
         return acosh(1 + numerator / denominator)
-
 
     @staticmethod
     def _proj(x):
@@ -236,6 +235,8 @@ class HalfPlaneParameter(RParameter):
         # AT THIS POINT, xxx is half plane
         return xxx
 
+
+
     def initial_proj(self):
         """ Project the initialization of the embedding onto the manifold """
         self.data[...,0] = torch.sqrt(1 + torch.norm(self.data.detach()[...,1:],2,-1)**2)
@@ -252,17 +253,24 @@ class HalfPlaneParameter(RParameter):
 ###############################################################
 
 class KleinParameter(RParameter):
-    def __new__(cls, data=None, requires_grad=True, sizes=None, check_graph=False):
-        ret =  super().__new__(cls, data, requires_grad, sizes)
+    def __new__(cls, data=None, requires_grad=True, sizes=None, check_graph=False, exp=True):
+        ret =  super().__new__(cls, data, requires_grad, sizes, exp)
+
         ret.check_graph = check_graph
         return ret
 
-    # def modify_grad_inplace(self):
-    #     w_norm   = torch.norm(self.data,2,-1, True)
-    #     hyper_b   = 1 - w_norm**2
-    #     self.grad   *= hyper_b # multiply pointwise
-    #     self.grad.clamp_(min=-10.0, max=10.0)
-
+    def modify_grad_inplace(self):
+        w_norm   = torch.norm(self.data,2,-1, True)
+        hyper_b   = 1 - w_norm**2
+        self.grad   *= hyper_b # multiply pointwise
+        self.grad.clamp_(min=-10.0, max=10.0)
+    @staticmethod
+    def dot_h(x,y):
+        return torch.sum(x * y, -1)
+    @staticmethod
+    def norm_h(x):
+        assert torch.all(KleinParameter.dot_h(x,x) >= 0), torch.min(KleinParameter.dot_h(x,x))
+        return torch.sqrt(torch.clamp(KleinParameter.dot_h(x,x), min=0.0))
     @staticmethod
     def _correct(x, eps=1e-10):
         current_norms = torch.norm(x,2,x.dim() - 1)
@@ -286,13 +294,7 @@ class KleinParameter(RParameter):
         x_[...,1:] = x_tail
         x_[...,0] = torch.sqrt(1 + torch.norm(x_tail,2,-1)**2)
 
-        debug = False
-        if debug:
-            bad = torch.min(-HyperboloidParameter.dot_h(x_,x_))
-            if bad <= 0.0:
-                print("way off klein", bad)
-            assert torch.all(-HyperboloidParameter.dot_h(x_,x_) > 0.0), f"way off klein {torch.min(-HyperboloidParameter.dot_h(x_,x_))}"
-        xxx = x_ / torch.sqrt(torch.clamp(-HyperboloidParameter.dot_h(x_,x_), min=0.0)).unsqueeze(-1)
+        xxx = x_ / torch.sqrt(torch.clamp(-KleinParameter.dot_h(x_,x_), min=0.0)).unsqueeze(-1)
 
         # AT THIS POINT, xxx is hyperboloid
         final_dim = xxx[...,-1]
@@ -313,20 +315,20 @@ class KleinParameter(RParameter):
         x = self.data.detach()
         v = -lr * self.grad
 
-        assert torch.all(1 - torch.isnan(v))
-        n = self.__class__.norm_h(v).unsqueeze(-1)
-        assert torch.all(1 - torch.isnan(n))
-        n.clamp_(max=1.0)
+        # assert torch.all(1 - torch.isnan(v))
+        # n = self.__class__.norm_h(v).unsqueeze(-1)
+        # assert torch.all(1 - torch.isnan(n))
+        # n.clamp_(max=1.0)
         v_norm = torch.norm(v)
-        e = v * (torch.sinh(n) / torch.cosh(n))
+        e = v * (torch.sinh(v_norm) / torch.cosh(v_norm))
         self.data = e
         self.proj()
 
-    def proj(self, eps=1e-10):
-        self.data = self.__class__._proj(self.data.detach())
+    # def proj(self, eps=1e-10):
+    #     self.data = self.__class__._proj(self.data.detach())
 
     def __repr__(self):
-        return 'Hyperbolic parameter containing:' + self.data.__repr__()
+        return 'Klein parameter containing:' + self.data.__repr__()
 
 
 ###############################################################
