@@ -10,6 +10,10 @@ def acosh(x):
     return torch.log(x + torch.sqrt(x**2-1))
 
 
+###############################################################
+#################    RParameter    ############################
+###############################################################
+
 class RParameter(nn.Parameter):
     def __new__(cls, data=None, requires_grad=True, sizes=None, exp=False):
         if data is None:
@@ -44,7 +48,10 @@ class RParameter(nn.Parameter):
                 p.modify_grad_inplace()
 
 
-# TODO can use kwargs instead of pasting defaults
+###############################################################
+#################    Hyperboloid    ###########################
+###############################################################
+
 class HyperboloidParameter(RParameter):
     def __new__(cls, data=None, requires_grad=True, sizes=None, exp=True):
         if sizes is not None:
@@ -135,7 +142,11 @@ class HyperboloidParameter(RParameter):
         # self.grad += self.__class__.dot_h(self.data, self.grad).unsqueeze(-1) * self.data
         self.grad -= self.__class__.dot_h(self.data, self.grad).unsqueeze(-1) / HyperboloidParameter.dot_h(self.data, self.data).unsqueeze(-1) * self.data
 
-# TODO can use kwargs instead of pasting defaults
+
+###############################################################
+#################    Half Plane    ############################
+###############################################################
+
 class HalfPlaneParameter(RParameter):
     def __new__(cls, data=None, requires_grad=True, sizes=None, exp=True):
         if sizes is not None:
@@ -251,8 +262,10 @@ class HalfPlaneParameter(RParameter):
         self.grad.clamp_(min=-10000.0, max=10000.0)
 
 
-# TODO:
-# 1. Improve speed up of projection by making operations in place.
+###############################################################
+#######################   Klein    ############################
+###############################################################
+
 class KleinParameter(RParameter):
     def __new__(cls, data=None, requires_grad=True, sizes=None, check_graph=False):
         ret =  super().__new__(cls, data, requires_grad, sizes)
@@ -318,8 +331,10 @@ class KleinParameter(RParameter):
         return 'Hyperbolic parameter containing:' + self.data.__repr__()
 
 
-# TODO:
-# 1. Improve speed up of projection by making operations in place.
+###############################################################
+###################    Poincare    ############################
+###############################################################
+
 class PoincareParameter(RParameter):
     def __new__(cls, data=None, requires_grad=True, sizes=None, check_graph=False):
         ret =  super().__new__(cls, data, requires_grad, sizes)
@@ -364,6 +379,11 @@ class PoincareParameter(RParameter):
 
     def __repr__(self):
         return 'Hyperbolic parameter containing:' + self.data.__repr__()
+
+
+###############################################################
+##################    Spherical    ############################
+###############################################################
 
 class SphericalParameter(RParameter):
     def __new__(cls, data=None, requires_grad=True, sizes=None, exp=True):
