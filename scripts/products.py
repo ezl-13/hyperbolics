@@ -7,13 +7,13 @@ import random
 datasets = [
     "synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549",
     "synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282",
-    "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
-    "synthetic/CS229_datasets/les_mis.edges",
-    "synthetic/CS229_datasets/random_graph_nodes400_prob0.5_d0.49673.edges",
-    "synthetic/CS229_datasets/random_graph_nodes400_prob0.25_d0.24924.edges",
-    "synthetic/CS229_datasets/random_graph_nodes400_prob1_d1.0.edges",
-    "synthetic/CS229_datasets/random_graph_nodes400_prob0.75_d0.74951.edges",
-    "synthetic/CS229_datasets/sierp-K4-5.edges"
+    # "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
+    "synthetic/CS229_datasets/les_mis",
+    "synthetic/CS229_datasets/random_graph_nodes400_prob0.5_d0.49673",
+    "synthetic/CS229_datasets/random_graph_nodes400_prob0.25_d0.24924",
+    "synthetic/CS229_datasets/random_graph_nodes400_prob1_d1.0",
+    "synthetic/CS229_datasets/random_graph_nodes400_prob0.75_d0.74951",
+    "synthetic/CS229_datasets/sierp-K4-5"
 ]
 
 models = [
