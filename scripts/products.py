@@ -7,7 +7,7 @@ import random
 datasets = [
     "synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549",
     "synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282",
-    "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
+    # "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
     "synthetic/CS229_datasets/les_mis",
     "synthetic/CS229_datasets/random_graph_nodes400_prob0.5_d0.49673",
     "synthetic/CS229_datasets/random_graph_nodes400_prob0.25_d0.24924",
@@ -41,7 +41,7 @@ models = [
 #python /content/hyperbolics/pytorch/pytorch_hyperbolic.py learn /content/hyperbolics/data/edges/synthetic/CS229_datasets/cycle_tree_c10_r2_h2.edges --dim 10 --log-name /content/hyperbolics/out/cycle_tree_c10_r2_h2.H10-1.lr5 --batch-size 64 --epochs 1000 --checkpoint-freq 100 -l 5 --subsample 16
 
 
-lrs = [0.01, 0.1, 0.001]
+lrs = [5, 0.1, 0.01]
 
 def run_pytorch(run_name, epochs, batch_size):
     params = []
