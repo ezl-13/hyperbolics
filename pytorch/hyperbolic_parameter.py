@@ -9,7 +9,6 @@ def dot(x,y): return torch.sum(x * y, -1)
 def acosh(x):
     return torch.log(x + torch.sqrt(x**2-1))
 
-
 class RParameter(nn.Parameter):
     def __new__(cls, data=None, requires_grad=True, sizes=None, exp=False):
         if data is None:
