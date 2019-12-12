@@ -7,7 +7,7 @@ import random
 datasets = [
     "synthetic/CS229_datasets/balanced_tree_r3_h5_d0.00549",
     "synthetic/CS229_datasets/balanced_tree_r5_h3_d0.01282",
-    "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
+    # "synthetic/CS229_datasets/balanced_tree_r5_h5_d0.00051",
     "synthetic/CS229_datasets/les_mis",
     "synthetic/CS229_datasets/random_graph_nodes400_prob0.5_d0.49673",
     "synthetic/CS229_datasets/random_graph_nodes400_prob0.25_d0.24924",
@@ -17,7 +17,7 @@ datasets = [
 ]
 
 models = [
-    {'dim': 2, 'hyp': 1, 'edim': 0, 'euc': 0, 'sdim': 0, 'sph': 0},
+    # {'dim': 2, 'hyp': 1, 'edim': 0, 'euc': 0, 'sdim': 0, 'sph': 0},
     {'dim': 5, 'hyp': 1, 'edim': 0, 'euc': 0, 'sdim': 0, 'sph': 0},
     {'dim': 10, 'hyp': 1, 'edim': 0, 'euc': 0, 'sdim': 0, 'sph': 0},
 ]

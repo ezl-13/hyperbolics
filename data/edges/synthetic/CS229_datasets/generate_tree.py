@@ -22,11 +22,21 @@ import matplotlib.pyplot as plt
     
 # "/Users/shawn/Documents/GitHub/hyperbolics/data/edges/phylo_tree.edges"
 
-G = nx.read_edgelist("/Users/shawn/Documents/GitHub/hyperbolics/data/edges/synthetic/sierp-K4-5.edges")
+# random_graph_nodes400_prob0.5_d0.49673.edges
+# random_graph_nodes400_prob0.25_d0.24924.edges
+# random_graph_nodes400_prob1_d1.0.edges
+# random_graph_nodes400_prob0.75_d0.74951.edges
+
+
+
+G = nx.read_edgelist("/Users/shawn/Documents/GitHub/hyperbolics/data/edges/synthetic/CS229_datasets/sierp-K4-5.edges")
 # G = nx.les_miserables_graph()
 # G = nx.convert_node_labels_to_integers(G)
 # filename = '/Users/shawn/Documents/GitHub/hyperbolics/data/edges/synthetic/CS229_datasets/les_mis'
 # nx.write_edgelist(G, filename + '.edges', data=False)
+# G = nx.erdos_renyi_graph(50, 0.50)
 nx.draw_kamada_kawai(G)
 plt.show()
 # plt.savefig("/Users/shawn/Documents/GitHub/hyperbolics/data/edges/synthetic/CS229_datasets/plots/les_mis" + ".png", dpi=200)
+
+# print (nx.number_connected_components(G))
