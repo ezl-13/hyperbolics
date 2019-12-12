@@ -89,8 +89,8 @@ class ProductEmbedding(nn.Module):
         self.n = n
         self.riemann = riemann
 
-        self.H = nn.ModuleList([Embedding(dist_p, PoincareParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
-        # self.H = nn.ModuleList([Embedding(HyperboloidParameter.dist_h, HyperboloidParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
+        # self.H = nn.ModuleList([Embedding(dist_p, PoincareParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
+        self.H = nn.ModuleList([Embedding(HyperboloidParameter.dist_h, HyperboloidParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
         # self.H = nn.ModuleList([Embedding(HalfPlaneParameter.dist_h, HalfPlaneParameter, n, hyp_d, project, initialize, learn_scale, initial_scale) for _ in range(hyp_copies)])
         self.E = nn.ModuleList([Embedding(dist_e, EuclideanParameter, n, euc_d, False, initialize, False, initial_scale) for _ in range(euc_copies)])
         # self.E = nn.ModuleList([Embedding(dist_e, EuclideanParameter, n, euc_d, False, initialize, learn_scale, initial_scale) for _ in range(euc_copies)])
