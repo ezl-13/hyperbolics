@@ -1,5 +1,5 @@
-# hyperbolics
-Hyperbolic embedding implementations of [Representation Tradeoffs for Hyperbolic Embeddings](https://arxiv.org/pdf/1804.03329.pdf) +  product embedding implementations of [Learning Mixed-Curvature Representations in Product Spaces](https://openreview.net/pdf?id=HJxeWnCcF7)
+# Hyperbolics
+Hyperbolic embedding implementations of [Representation Tradeoffs for Hyperbolic Embeddings](https://arxiv.org/pdf/1804.03329.pdf) +  product embedding implementations of [Learning Mixed-Curvature Representations in Product Spaces](https://openreview.net/pdf?id=HJxeWnCcF7). This repository was forked from https://github.com/HazyResearch/hyperbolics.
 
 <p align="center">
   <img src="assets/binary_tree.png" alt="Hyperbolic embedding of binary tree" width="400"/>
@@ -34,12 +34,10 @@ Products of hyperbolic spaces with Euclidean and spherical spaces are also suppo
 ### Experiment scripts
 * `scripts/run_exps.py` runs a full set of experiments for a list of datasets. Example usage (note: the default run settings take a long time to finish):
     ```
-    python scripts/run_exps.py phylo -d phylo_tree --epochs 20
+    python scripts/experiments.py saved_directory --epochs 1000
     ```
 
     Currently, it executes the following experiments:
-    1. The combinatorial construction with fixed precision in varying dimensions
-    2. The combinatorial construction in dimension 2 (Sarkar's algorithm), with very high precision
     3. Pytorch optimizer in varying dimensions, random initialization
     4. Pytorch optimizer in varying dimensions, using the embedding produced by the combinatorial construction as initialization 
 
