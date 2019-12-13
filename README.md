@@ -32,7 +32,7 @@ python pytorch/pytorch_hyperbolic.py learn data/edges/phylo_tree.edges --batch-s
 Products of hyperbolic spaces with Euclidean and spherical spaces are also supported. E.g. adding flags `-euc 1 -edim 20 -sph 2 -sdim 10` embeds into a product of Euclidean space of dimension 20 with two copies of spherical space of dimension 10.
 
 ### Experiment scripts
-* `scripts/run_exps.py` runs a full set of experiments for a list of datasets. Example usage (note: the default run settings take a long time to finish):
+* `scripts/experiments.py` runs a full set of experiments for a list of datasets. Example usage (note: the default run settings take a long time to finish):
     ```
     python scripts/experiments.py saved_directory --epochs 1000
     ```
